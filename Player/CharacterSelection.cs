@@ -7,14 +7,14 @@ public class CharacterSelection : MonoBehaviour
     public GameObject Aj, Josh, Maria, Luna;
     public MainMenuFunction mainMenu;
     public bool aj, josh, luna, maria;
+
+
     
+
     // Update is called once per frame
     void Update()
     {
-        aj = mainMenu.isSelectedAj;
-        josh = mainMenu.isSelectedJosh;
-        luna = mainMenu.isSelectedLuna;
-        maria = mainMenu.isSelectedMaria;
+        
        if(mainMenu.isSelectedAj)
         {
             Aj.SetActive(true);

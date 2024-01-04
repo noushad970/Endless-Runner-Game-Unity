@@ -170,4 +170,19 @@ public class MainMenuFunction : MonoBehaviour
         Application.Quit();
     }
 
+    //Game Data system
+    public void onClickNewGame()
+    {
+        DataPersistanceManager.instance.newGame();
+    }
+
+    public void onClickSaveGame()
+    {
+        DataPersistanceManager.instance.saveGame();
+    }
+
+    public void onClickLoadGame()
+    {
+        DataPersistanceManager.instance.loadGame();
+    }
 }

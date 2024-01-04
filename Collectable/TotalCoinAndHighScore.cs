@@ -8,19 +8,14 @@ public class TotalCoinAndHighScore : MonoBehaviour
     public Text totalcoin;
     public Text highScore;
     
+
+    
+
     private void Start()
     {
-        //for coin collect
-        if (PlayerPrefs.HasKey("Coinsum"))
-        {
-            CollectCoin.coins = PlayerPrefs.GetInt("Coinsum");
-        }
-        else
-        {
-            PlayerPrefs.SetInt("Coinsum", CollectCoin.coins);
-            PlayerPrefs.Save();
-        }
-        totalcoin.GetComponent<Text>().text = "" + CollectCoin.coins;
+        
+
+        totalcoin.GetComponent<Text>().text = "" + CollectableControl.TotalcoinCountForMenu;
 
         //highScore
         if (PlayerPrefs.HasKey("HighScores"))
@@ -36,7 +31,7 @@ public class TotalCoinAndHighScore : MonoBehaviour
     }
     private void Update()
     {
-        totalcoin.GetComponent<Text>().text = "" + CollectCoin.coins;
+
         if (LevelDistance.disRun > PlayerPrefs.GetInt("HighScores"))
         {
 
@@ -47,4 +42,4 @@ public class TotalCoinAndHighScore : MonoBehaviour
         highScore.GetComponent<Text>().text = LevelDistance.highScore.ToString();
     }
 }
-//
+

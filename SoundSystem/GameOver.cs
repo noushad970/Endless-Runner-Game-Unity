@@ -8,28 +8,30 @@ public class GameOver : MonoBehaviour
 {
     
     public bool Gameover=false;
+    public static bool GameoverSave = false;
     public GameObject gameOverScore;
     public GameObject ScoreHide;
     public int PreviousScore;
     //public LevelDistance Distance;
     public int coins=0;
     public Text coinTexts;
-    
+   
     private void Update()
     {
 
         if (Gameover)
         {
 
-           // SavePlayer();
-
-
+            // SavePlayer();
+            
             coins += CollectableControl.coinCount;
             // PreviousScore = Distance.disRun;
             coinTexts.text = coins.ToString();
 
            // LoadData();
             StartCoroutine(wait1Sec());
+            GameoverSave = true;
+            Gameover = false;
 
 
         }
