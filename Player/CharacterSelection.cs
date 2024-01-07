@@ -8,35 +8,36 @@ public class CharacterSelection : MonoBehaviour
     public MainMenuFunction mainMenu;
     public bool aj, josh, luna, maria;
 
-
     
 
+
+
     // Update is called once per frame
-    void Update()
+    void Start()
     {
         
-       if(mainMenu.isSelectedAj)
+       if(MainMenuFunction.characterSelection==1)
         {
             Aj.SetActive(true);
             Josh.SetActive(false); 
             Maria.SetActive(false);
             Luna.SetActive(false);
         }
-        if (mainMenu.isSelectedJosh)
+        if (MainMenuFunction.characterSelection == 2)
         {
             Aj.SetActive(false);
             Josh.SetActive(true);
             Maria.SetActive(false);
             Luna.SetActive(false);
         }
-        if (mainMenu.isSelectedLuna)
+        if (MainMenuFunction.characterSelection == 4)
         {
             Aj.SetActive(false);
             Josh.SetActive(false);
             Maria.SetActive(false);
             Luna.SetActive(true);
         }
-        if (mainMenu.isSelectedMaria)
+        if (MainMenuFunction.characterSelection == 3)
         {
             Aj.SetActive(false);
             Josh.SetActive(false);

@@ -4,17 +4,112 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuFunction : MonoBehaviour
+public class MainMenuFunction : MonoBehaviour, IDataPersistence
 {
     // Start is called before the first frame update
 
     public GameOver isOver;
     public GameObject highScore;
-    public GameObject shop, about, option, quit, startButton, selectMap, selectChar,backFromShop,BackFromSelectChar,AJButton,JoshButton,MariaButton,LunaButton,AJ,Josh,Luna,Maria;
+    public GameObject shop, about, option, quit, startButton, selectMap, selectChar,backFromShop,BackFromSelectChar,AJButton,JoshButton,MariaButton,LunaButton,AJ1,Josh,Luna,Maria;
     public bool isSelectedAj, isSelectedJosh, isSelectedLuna, isSelectedMaria;
+    public static bool saveCharacterData=false;
+    public static int characterSelection;
+    public static int LoadInt=0;
+
+    public void loadData(GameData data)
+    {
+        // this.coins = data.coins;
+        characterSelection = data.SelectedCharacter;
+
+
+
+    }
+    public void saveData(ref GameData data)
+    {
+        if(isSelectedAj) {
+            data.SelectedCharacter = 1;
+        }
+        if(isSelectedJosh)
+        {
+            data.SelectedCharacter = 2;
+        }
+        if(isSelectedLuna)
+        {
+            data.SelectedCharacter = 4;
+        }
+        if(isSelectedMaria)
+        {
+            data.SelectedCharacter = 3;
+        }
+        
+    }
     // Update is called once per frame
+    private void Update()
+    {
+        Debug.Log(characterSelection);
+        if (characterSelection == 1)
+        {
+            AJ1.SetActive(true);
+            Josh.SetActive(false);
+            Maria.SetActive(false);
+            Luna.SetActive(false);
+        }
+        if (characterSelection == 2)
+        {
+            AJ1.SetActive(false);
+            Josh.SetActive(true);
+            Maria.SetActive(false);
+            Luna.SetActive(false);
+        }
+        if (characterSelection == 4)
+        {
+            AJ1.SetActive(false);
+            Josh.SetActive(false);
+            Maria.SetActive(false);
+            Luna.SetActive(true);
+        }
+        if (characterSelection == 3)
+        {
+            AJ1.SetActive(false);
+            Josh.SetActive(false);
+            Maria.SetActive(true);
+            Luna.SetActive(false);
+        }
+
+    }
     private void Start()
     {
+
+        /* */
+        if (characterSelection == 1)
+        {
+            AJ1.SetActive(true);
+            Josh.SetActive(false);
+            Maria.SetActive(false);
+            Luna.SetActive(false);
+        }
+        if (characterSelection == 2)
+        {
+            AJ1.SetActive(false);
+            Josh.SetActive(true);
+            Maria.SetActive(false);
+            Luna.SetActive(false);
+        }
+        if (characterSelection == 4)
+        {
+            AJ1.SetActive(false);
+            Josh.SetActive(false);
+            Maria.SetActive(false);
+            Luna.SetActive(true);
+        }
+        if (characterSelection == 3)
+        {
+            AJ1.SetActive(false);
+            Josh.SetActive(false);
+            Maria.SetActive(true);
+            Luna.SetActive(false);
+        }
+        //
         shop.SetActive(true);
         option.SetActive(true);
         quit.SetActive(true);
@@ -81,10 +176,12 @@ public class MainMenuFunction : MonoBehaviour
         isSelectedLuna = false;
         isSelectedMaria = false;
         BackAllCharShow();
-        AJ.SetActive(isSelectedAj);
+        AJ1.SetActive(isSelectedAj);
         Josh.SetActive(false) ;
         Luna.SetActive(false) ;
         Maria.SetActive(false) ;
+        saveCharacterData = true;
+       
     }
     public void ClickOnJosh()
     {
@@ -96,7 +193,9 @@ public class MainMenuFunction : MonoBehaviour
         Josh.SetActive(isSelectedJosh);
         Luna.SetActive(false);
         Maria.SetActive(false);
-        AJ.SetActive(false);
+        AJ1.SetActive(false);
+        saveCharacterData = true;
+       
     }
     public void ClickOnMaria()
     {
@@ -106,9 +205,11 @@ public class MainMenuFunction : MonoBehaviour
         isSelectedMaria = true;
         BackAllCharShow();
         Maria.SetActive(isSelectedMaria);
-        AJ.SetActive(false);
+        AJ1.SetActive(false);
         Josh.SetActive(false);
         Luna.SetActive(false);
+        saveCharacterData = true;
+
     }
     public void ClickOnLuna()
     {
@@ -119,8 +220,10 @@ public class MainMenuFunction : MonoBehaviour
         BackAllCharShow();
         Luna.SetActive(isSelectedLuna);
         Maria.SetActive(false);
-        AJ.SetActive(false);
+        AJ1.SetActive(false);
         Josh.SetActive(false );
+        saveCharacterData = true;
+     
 
     }
     public void BackAllCharShow()

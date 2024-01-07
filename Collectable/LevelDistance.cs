@@ -11,40 +11,27 @@ public class LevelDistance : MonoBehaviour
     public int previousScore;
     public static int highScore=0;
     public bool addingDis=false;
-    public PlayerController playerController;
+
+    public PlayerController playerControllerAJ;
+    public PlayerController playerControllerJosh;
+    public PlayerController playerControllerMaria;
+    public PlayerController playerControllerLuna;
+
     float timer=0.001f;
     public bool gameStart = false;
 
 
-    //private void Start()
-    //{
-
-    //    if (PlayerPrefs.HasKey("HighScores"))
-    //    {
-    //        highScore = PlayerPrefs.GetInt("HighScores");
-    //    }
-    //    else
-    //    {
-    //        PlayerPrefs.SetInt("HighScores", highScore);
-    //        PlayerPrefs.Save();
-    //    }
-    //}
+    
 
     private void Update()
     {
          
-        if (!addingDis && playerController.gameStart)
+        if (!addingDis && playerControllerAJ.gameStart || playerControllerLuna.gameStart || playerControllerMaria.gameStart || playerControllerJosh.gameStart)
         {
             addingDis = true;
             StartCoroutine(AddingDis());
         }
-        //if (disRun > PlayerPrefs.GetInt("HighScores"))
-        //{
-
-        //    highScore = disRun;
-        //}
-        //PlayerPrefs.SetInt("HighScores", highScore);
-        //PlayerPrefs.Save();
+       
 
     }
     IEnumerator AddingDis()

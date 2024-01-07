@@ -19,8 +19,9 @@ public class DataPersistanceManager : MonoBehaviour
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         this.dataPersistenceObjects = FindALlDataPersistanceObjects();
         loadGame();
+       
     }
-
+    
     private void Update()
     {
         if(GameOver.GameoverSave)
@@ -29,6 +30,16 @@ public class DataPersistanceManager : MonoBehaviour
             loadGame();
             GameOver.GameoverSave= false;
         }
+        if(MainMenuFunction.saveCharacterData== true)
+        {
+            Debug.Log("data Luna saved: " + MainMenuFunction.saveCharacterData);
+            saveGame();
+            loadGame();
+           
+            MainMenuFunction.saveCharacterData = false;
+            Debug.Log("data Luna saved: " + MainMenuFunction.saveCharacterData);
+        }
+       
     }
     public static DataPersistanceManager instance 
     { 
@@ -37,6 +48,7 @@ public class DataPersistanceManager : MonoBehaviour
     }
     private void Awake()
     {
+
         if(instance != null)
         {
             Debug.LogError("Found more than one data persistance in this scene");
