@@ -28,7 +28,6 @@ public class DataPersistanceManager : MonoBehaviour
         {
             saveGame();
             loadGame();
-            instAds.ShowAd();
             GameOver.GameoverSave= false;
         }
         if(MainMenuFunction.saveCharacterData== true)
@@ -37,7 +36,6 @@ public class DataPersistanceManager : MonoBehaviour
             saveGame();
             loadGame();
 
-            instAds.ShowAd();
             MainMenuFunction.saveCharacterData = false;
             Debug.Log("data Luna saved: " + MainMenuFunction.saveCharacterData);
         }
@@ -46,7 +44,6 @@ public class DataPersistanceManager : MonoBehaviour
             saveGame();
             loadGame();
 
-            instAds.ShowAd();
             MainMenuFunction.saveMap = false;
         }
         if (PauseSystem.IsGoMainMenu)

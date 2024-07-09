@@ -8,7 +8,6 @@ public class CollectCoin : MonoBehaviour
 {
    // public Text highScore;
     public GameObject totalcoin;
-    public LevelDistance HighScore;
    // public int totalCoin;
     public AudioSource coinFX;
     

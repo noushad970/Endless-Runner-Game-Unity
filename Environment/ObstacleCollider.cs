@@ -37,7 +37,7 @@ public class ObstacleCollider : MonoBehaviour
     //while player collide with an object it will be game over
     private void OnTriggerEnter(Collider other)
     {
-        this.gameObject.GetComponent<MeshCollider>().enabled = false;
+        this.gameObject.GetComponent<Collider>().enabled = false;
 
         Cat.GetComponent<PlayerController>().enabled = false;
         CatAnimator.SetBool("GameOver", true);

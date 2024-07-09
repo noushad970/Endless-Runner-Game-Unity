@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class CollectableControl : MonoBehaviour, IDataPersistence
 {
+    public static CollectableControl instance;
     public static int coinCount;
     public static int TotalcoinCountForMenu;//this value should changed when I give reward to any player from mainmenu;
     public int coins;
@@ -11,6 +12,10 @@ public class CollectableControl : MonoBehaviour, IDataPersistence
     public PlayerController playerControllerCat;
     public PlayerController playerControllerRaccon;
     public Button getCoinsButton;
+    private void Awake()
+    {
+        instance= this;
+    }
     private void Start()
     {
         getCoinsButton.onClick.AddListener(rewarded);

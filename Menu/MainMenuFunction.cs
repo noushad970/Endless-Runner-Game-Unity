@@ -10,13 +10,17 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
 
     public GameOver isOver;
     public GameObject highScore;
-    public GameObject shop,  quit, startButtonDay, selectMap, selectChar,backFromShop,BackFromSelectChar,CatButton,RacconButton,racoon,cat,dayMapButton,NightMapButton,DesertMapButton,aboutButton;
-    public bool isSelectedCat, isSelectedRacoon,isSelectedNightMap,isSelectedDayMap, isSelectedDesertMap;
+    public GameObject shop,  quit, startButtonDay, selectMap, selectChar,backFromShop,BackFromSelectChar,CatButton,RacconButton,racoon,cat,dayMapButton,NightMapButton,DesertMapButton,subwayMapButton,aboutButton;
+    public bool isSelectedCat, isSelectedRacoon,isSelectedNightMap,isSelectedDayMap, isSelectedDesertMap,isSelectedSubwayMap;
     public static bool saveCharacterData=false,saveMap=false;
     public static int characterSelection,mapSelection;
     public static int LoadInt=0;
     public GameObject HowToPlayScreen;
-
+    bool isBuyedDesertMap, isBuyedSubwayMap;
+    int totalcoin;
+    public GameObject isLockedDesertMap,isLockedSubwayMap;
+    public GameObject confirmDesertMapBuyPanel, confirmSubwayMapBuyPanel, panel,notEnoughCoinPanel;
+    public Button okButton, yesButtonDesert, yesButtonSubway, NoButtonSubway,NoButtonDesert;
     //load data will load the previous data
     public void loadData(GameData data)
     {
@@ -24,11 +28,15 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         characterSelection = data.SelectedCharacter;
 
         mapSelection = data.selectedMap;
+        isBuyedDesertMap = data.isEnableDesertMap;
+        isBuyedSubwayMap = data.isEnableSubWayMap;
+        totalcoin = data.coins;
+        isBuyedDesertMap=data.isEnableDesertMap;
 
 
     }
     //save data will save all the saved data while open or exit the app
-
+    int mapval = 0;
     public void saveData(ref GameData data)
     {
         if(isSelectedCat) {
@@ -46,16 +54,27 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         {
             data.selectedMap = 1;
         }
-        if (isSelectedDesertMap)
+        if (isSelectedDesertMap && isBuyedDesertMap)
         {
             data.selectedMap = 3;
+
+            data.isEnableDesertMap = true;
+            data.coins = totalcoin;
         }
+        if(isSelectedSubwayMap && isBuyedDesertMap)
+        {
+            data.selectedMap = 4;
+            data.isEnableDesertMap= true;
+            data.coins = totalcoin;
+        }
+        mapval = data.selectedMap;
 
 
     }
     // Update is called once per frame
     private void Update()
     {
+        Debug.Log("Selected Map Value: " + mapval);
         ///those code will execute the player and map according to player choice
         if (isSelectedCat)
         {
@@ -77,6 +96,10 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         {
             mapSelection = 3;
         }
+        if (isSelectedSubwayMap)
+        {
+            mapSelection = 4;
+        }
         if (characterSelection == 1)
         {
             cat.SetActive(true);
@@ -88,7 +111,12 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
             cat.SetActive(false);
             racoon.SetActive(true);
         }
-        
+        if (isBuyedDesertMap && isLockedDesertMap!=null)
+        {
+            Destroy(isLockedDesertMap);
+        }
+        if(isBuyedSubwayMap && isLockedSubwayMap!=null)
+        { Destroy(isLockedSubwayMap);}
 
 
 
@@ -96,6 +124,11 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
     private void Start()
     {
         //this code will execute while the game will start. as a menu
+        okButton.onClick.AddListener(OnclickOkButton);
+        NoButtonSubway.onClick.AddListener(OnclickOkButton);
+        NoButtonDesert.onClick.AddListener(OnclickOkButton);
+        yesButtonDesert.onClick.AddListener(OnclickYesDesertButton);
+        yesButtonSubway.onClick.AddListener(onClickYesSubwayButton);
         cat.SetActive(true);
         HowToPlayScreen.SetActive(false);
         if (characterSelection == 1)
@@ -126,6 +159,11 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
           //  startButtonNight.SetActive(true);
         }
         if (mapSelection == 3)
+        {
+            startButtonDay.SetActive(true);
+            //  startButtonNight.SetActive(true);
+        }
+        if (mapSelection == 4)
         {
             startButtonDay.SetActive(true);
             //  startButtonNight.SetActive(true);
@@ -170,6 +208,10 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         {
             startButtonDay.SetActive(false);
         }
+        if (mapSelection == 4)
+        {
+            startButtonDay.SetActive(false);
+        }
         selectChar.SetActive(true);
         selectMap.SetActive(true);
         backFromShop.SetActive(true);
@@ -192,6 +234,10 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
             startButtonDay.SetActive(false);
         }
         if (mapSelection == 3)
+        {
+            startButtonDay.SetActive(false);
+        }
+        if (mapSelection == 4)
         {
             startButtonDay.SetActive(false);
         }
@@ -236,10 +282,12 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         isSelectedDayMap = true;
         isSelectedNightMap = false;
         isSelectedDesertMap = false;
+        isSelectedSubwayMap = false;
         BackAllCharShow();
         dayMapButton.SetActive(false);
         NightMapButton.SetActive(false);
         DesertMapButton.SetActive(false);
+        subwayMapButton.SetActive(false);
         saveMap =true;
         
 
@@ -250,12 +298,14 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         isSelectedDayMap = false;
         isSelectedNightMap = true;
         isSelectedDesertMap = false;
+        isSelectedSubwayMap = false;
         BackAllCharShow();
 
         dayMapButton.SetActive(false);
         NightMapButton.SetActive(false);
 
         DesertMapButton.SetActive(false);
+        subwayMapButton.SetActive(false);
         saveMap =true;
 
 
@@ -263,17 +313,115 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
     //this code will select the night map
     public void ClickOnDesertMap()
     {
+        if(isBuyedDesertMap)
+        {
+            isSelectedDayMap = false;
+            isSelectedNightMap = false;
+            isSelectedDesertMap = true;
+            isSelectedSubwayMap = false;
+            BackAllCharShow();
+
+            dayMapButton.SetActive(false);
+            NightMapButton.SetActive(false);
+            DesertMapButton.SetActive(false);
+            subwayMapButton.SetActive(false);
+            saveMap = true;
+        }
+        else
+        {
+            panel.SetActive(true);
+            confirmDesertMapBuyPanel.SetActive(true);
+            if(totalcoin>5000)
+            {
+
+                panel.SetActive(true);
+                confirmDesertMapBuyPanel.SetActive(true);
+                
+            }
+            else
+            {
+                Debug.Log("Dont have Enough Coins");
+                notEnoughCoinPanel.SetActive(true);
+
+                notEnoughCoinPanel.SetActive(true);
+            }
+        }
+
+
+    }
+    void OnclickYesDesertButton()
+    {
+        totalcoin -= 5000;
+        isBuyedDesertMap = true;
         isSelectedDayMap = false;
         isSelectedNightMap = false;
         isSelectedDesertMap = true;
+        isSelectedSubwayMap = false;
         BackAllCharShow();
 
         dayMapButton.SetActive(false);
         NightMapButton.SetActive(false);
         DesertMapButton.SetActive(false);
+        subwayMapButton.SetActive(false);
         saveMap = true;
+    }
+    public void ClickOnSubwayMap()
+    {
+        if(isBuyedSubwayMap)
+        {
+            isSelectedDayMap = false;
+            isSelectedNightMap = false;
+            isSelectedDesertMap = false;
+            isSelectedSubwayMap = true;
+            BackAllCharShow();
+
+            dayMapButton.SetActive(false);
+            NightMapButton.SetActive(false);
+            DesertMapButton.SetActive(false);
+            subwayMapButton.SetActive(false);
+            saveMap = true;
+        }
+        else
+        {
+            if (totalcoin > 10000)
+            {
+                panel.SetActive(true);
+                confirmSubwayMapBuyPanel.SetActive(true);
+                
+                
+            }
+            else
+            {
+                panel.SetActive(true);
+                notEnoughCoinPanel.SetActive(true);
+                Debug.Log("Dont have Enough Coins");
+            }
+        }
 
 
+    }
+    void onClickYesSubwayButton()
+    {
+        totalcoin -= 10000;
+        isBuyedSubwayMap = true;
+        isSelectedDayMap = false;
+        isSelectedNightMap = false;
+        isSelectedDesertMap = false;
+        isSelectedSubwayMap = true;
+        BackAllCharShow();
+
+        dayMapButton.SetActive(false);
+        NightMapButton.SetActive(false);
+        DesertMapButton.SetActive(false);
+        subwayMapButton.SetActive(false);
+        saveMap = true;
+    }
+    void OnclickOkButton()
+    {
+        panel.SetActive(false);
+        confirmDesertMapBuyPanel.SetActive(false);
+        confirmSubwayMapBuyPanel.SetActive(false);
+        notEnoughCoinPanel.SetActive(false);
     }
 
     //this method will go back from  all characters screen
@@ -294,6 +442,11 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
            // startButtonNight.SetActive(false);
         }
         if (mapSelection == 3)
+        {
+            startButtonDay.SetActive(false);
+            // startButtonNight.SetActive(false);
+        }
+        if (mapSelection == 4)
         {
             startButtonDay.SetActive(false);
             // startButtonNight.SetActive(false);
@@ -338,6 +491,11 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
             startButtonDay.SetActive(false);
             // startButtonNight.SetActive(false);
         }
+        if (mapSelection == 4)
+        {
+            startButtonDay.SetActive(false);
+            // startButtonNight.SetActive(false);
+        }
         //  about.SetActive(false);
         selectChar.SetActive(true);
         selectMap.SetActive(true);
@@ -348,6 +506,7 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         dayMapButton.SetActive(false);
         NightMapButton.SetActive(false);
         DesertMapButton.SetActive (false);
+        subwayMapButton.SetActive(false);
         HowToPlayScreen.SetActive(false);
         aboutButton.SetActive(false);
 
@@ -366,7 +525,7 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         backFromShop.SetActive(false);
         dayMapButton.SetActive(true);
         NightMapButton.SetActive(true);
-
+        subwayMapButton.SetActive(true);
         DesertMapButton.SetActive(true);
         BackFromSelectChar.SetActive(true);
         HowToPlayScreen.SetActive(false);
@@ -379,13 +538,13 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
 
 
         shop.SetActive(true);
-       // option.SetActive(true);
+        // option.SetActive(true);
         quit.SetActive(true);
-       // startButtonDay.SetActive(true);
+        // startButtonDay.SetActive(true);
         if (mapSelection == 1)
         {
             startButtonDay.SetActive(true);
-           // startButtonNight.SetActive(false);
+            // startButtonNight.SetActive(false);
         }
         if (mapSelection == 2)
         {
@@ -396,6 +555,10 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         {
             startButtonDay.SetActive(true);
             //startButtonNight.SetActive(true);
+        }
+        if (mapSelection == 4)
+        {
+            startButtonDay.SetActive(true);
         }
         //  about.SetActive(true);
         selectChar.SetActive(false);
