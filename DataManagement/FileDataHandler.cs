@@ -8,6 +8,8 @@ public class FileDataHandler
 {
     public string dataDirPath = "";
     public string dataFileName = "";
+
+    //creating file for saving data in local memory
     public  FileDataHandler(string dataDirPath,string dataFileName)
     {
         this.dataDirPath = dataDirPath;
@@ -39,6 +41,7 @@ public class FileDataHandler
         return loadedData;
 
     }
+    //game data save method
     public void Save(GameData data)
     {
         string fullpath=Path.Combine(dataDirPath,dataFileName);

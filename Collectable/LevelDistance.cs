@@ -12,10 +12,9 @@ public class LevelDistance : MonoBehaviour
     public static int highScore=0;
     public bool addingDis=false;
 
-    public PlayerController playerControllerAJ;
-    public PlayerController playerControllerJosh;
-    public PlayerController playerControllerMaria;
-    public PlayerController playerControllerLuna;
+    
+    public PlayerController playerControllerCat;
+    public PlayerController playerControllerRaccon;
 
     float timer=0.001f;
     public bool gameStart = false;
@@ -26,7 +25,7 @@ public class LevelDistance : MonoBehaviour
     private void Update()
     {
          
-        if (!addingDis && playerControllerAJ.gameStart || playerControllerLuna.gameStart || playerControllerMaria.gameStart || playerControllerJosh.gameStart)
+        if (!addingDis && playerControllerCat.gameStart || playerControllerRaccon.gameStart)
         {
             addingDis = true;
             StartCoroutine(AddingDis());

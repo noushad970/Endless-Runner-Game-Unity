@@ -8,7 +8,7 @@ public class DataPersistanceManager : MonoBehaviour
 
     [Header("File Storage Confiq")]
     [SerializeField] private string fileName;
-
+    public InterstitialAdExample instAds;
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
@@ -21,13 +21,14 @@ public class DataPersistanceManager : MonoBehaviour
         loadGame();
        
     }
-    
+    //saving and loading data while choosing new character or new map
     private void Update()
     {
         if(GameOver.GameoverSave)
         {
             saveGame();
             loadGame();
+            instAds.ShowAd();
             GameOver.GameoverSave= false;
         }
         if(MainMenuFunction.saveCharacterData== true)
@@ -35,11 +36,28 @@ public class DataPersistanceManager : MonoBehaviour
             Debug.Log("data Luna saved: " + MainMenuFunction.saveCharacterData);
             saveGame();
             loadGame();
-           
+
+            instAds.ShowAd();
             MainMenuFunction.saveCharacterData = false;
             Debug.Log("data Luna saved: " + MainMenuFunction.saveCharacterData);
         }
-       
+        if(MainMenuFunction.saveMap)
+        {
+            saveGame();
+            loadGame();
+
+            instAds.ShowAd();
+            MainMenuFunction.saveMap = false;
+        }
+        if (PauseSystem.IsGoMainMenu)
+        {
+            saveGame();
+            loadGame();
+
+            instAds.ShowAd();
+            PauseSystem.IsGoMainMenu = false;
+        }
+
     }
     public static DataPersistanceManager instance 
     { 
@@ -61,7 +79,7 @@ public class DataPersistanceManager : MonoBehaviour
     {
         this.gameData = new GameData();
     }
-
+    //save the game data
     public void saveGame()
     {
         foreach (IDataPersistence persistence in dataPersistenceObjects)
@@ -71,7 +89,7 @@ public class DataPersistanceManager : MonoBehaviour
         Debug.Log("save Total coins: " + gameData.coins);
         dataHandler.Save(gameData);
     }
-
+    //load the game data
     public void loadGame()
     {
         this.gameData = dataHandler.Load();
@@ -87,6 +105,7 @@ public class DataPersistanceManager : MonoBehaviour
         Debug.Log("Load Total coins: " + gameData.coins );
 
     }
+    //save the game data while exiting the app
     private void OnApplicationQuit()
     {
         saveGame();

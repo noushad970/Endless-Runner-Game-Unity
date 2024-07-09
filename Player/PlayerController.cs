@@ -1,61 +1,94 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+
+
+//this script is for player which will control the player movement jump slide etc
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 8f;
+    private float moveSpeed = 5f;
     public float moveAndroidSpeed = 20f;
-    private float LeftRightSpeed = 10f;
     public bool gameStart = false;
     static public bool CanMove = false;
-    public bool isJumping = false;
-    public bool ComingDown = false;
+    public static bool isJumping = false;
+    public static bool ComingDown = false;
     public GameObject playerObject;
     public Animator animator;
     public AudioSource jumpSound;
+
+
+    private float _xMovement;
+    public float xSpeed = 10f;
+    private int slideInput = 0;
     // Assuming you have a reference to the GameObject's Transform
 
     // touch set up
     public float swipeThreshold = 30.0f; // Adjust this value as needed for sensitivity.
 
-    private Vector2 touchStartPos;
-    private Vector2 touchEndPos;
 
-    // Set the Z-axis component to 0
+    [Header("Another Control")]
+    //float newXpos = 0f;
+    [HideInInspector]
+    public bool SwipeLeft, SwipeRight, SwipeUp, SwipeDown;
 
-    Transform objectTransform;
+    private CharacterController m_char;
+    private Animator m_animator;
+    private float x;
+    public float speedDodge;
+    private bool InJump, InRoll;
+    public float JumpPower = 7f;
+    public float forwardSpeed;
+    private float y;
+    private float colHeight, colCenterY;
+
     // Update is called once per frame
+    //wait 6 second for cowndown
     private void Start()
     {
 
-        objectTransform = playerObject.transform;
         StartCoroutine(waitfor6Sec());
+        m_char = GetComponent<CharacterController>();
+        m_animator = GetComponent<Animator>();
+        transform.position = Vector3.zero;
+        colCenterY = m_char.center.y;
+        colHeight = m_char.height;
     }
+
     void Update()
     {
-        float accelerationX = Input.acceleration.x;
-        float moveDirection = accelerationX;
         animator.SetBool("Idle", true);
         if (gameStart)
         {
-            if (this.gameObject.transform.position.x >= -4f && this.gameObject.transform.position.x <= 4f)
-            {
-                transform.Translate(Vector3.right * moveDirection * moveAndroidSpeed * Time.deltaTime);
-
-
-            }
-            if (playerObject.transform.position.x < -4f)
-                playerObject.transform.position = new Vector3(-4f, playerObject.transform.position.y, playerObject.transform.position.z);
-            if (playerObject.transform.position.x > 4f)
-                playerObject.transform.position = new Vector3(4f, playerObject.transform.position.y, playerObject.transform.position.z);
-            movement();
-            playerJump();
-            jumpAndroid();
+            //movement();
+            //playerJump();
+            sliding();
+            //rolling();
+            jump();
+            PlayerInputAndMovement();
             animator.SetBool("Idle", false);
+            InputHandling();
+           // StartCoroutine(moveX());
         }
     }
+    //if swap left or right in android it will switch the player to that side
+
+    //player will perform a sliding while press down key
+    void sliding()
+    {
+
+        if (slideInput == 1)
+        {
+            animator.Play("Slide");
+        }
+        slideInput = 0;
+
+
+    }
+
+
     IEnumerator waitfor6Sec()
     {
         yield return new WaitForSeconds(6f);
@@ -66,122 +99,101 @@ public class PlayerController : MonoBehaviour
         moveSpeed += 0.001f;
         yield return new WaitForSeconds(1f);
     }
-    void movement()
+   
+    
+   
+
+
+
+   
+    int jumpInput = 0;
+    void InputHandling()
     {
-        transform.Translate(Vector3.forward * moveSpeed * Time.deltaTime, Space.World);
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (SwapManager.swipeRight)
         {
-            if (this.gameObject.transform.position.x > LevelBoundary.Leftside)
+            if (_xMovement == 0)
             {
-                transform.Translate(Vector3.left * Time.deltaTime * LeftRightSpeed);
+                _xMovement = 1.5f;
+            }
+            else if (_xMovement == -1.5f)
+            {
+                _xMovement = 0f;
             }
         }
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        else if (SwapManager.swipeLeft)
         {
-            if (this.gameObject.transform.position.x < LevelBoundary.Rightside)
+            if (_xMovement == 0f)
             {
-                transform.Translate(Vector3.left * Time.deltaTime * LeftRightSpeed * -1);
+                _xMovement = -1.5f;
             }
+            else if (_xMovement == 1.5f)
+            {
+                _xMovement = 0f;
+            }
+        }
+        if (SwapManager.swapDown)
+        {
+            slideInput = 1;
+        }
+        if (SwapManager.swipeUp)
+        {
+            jumpInput = 1;
+        }
+
+    }
+
+    //another movement method
+    private void PlayerInputAndMovement()
+    {
+       
+        SwipeUp = SwapManager.swipeUp || Input.GetKeyDown(KeyCode.Space);
+        SwipeDown = SwapManager.swapDown;
+
+        
+        if (m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1)
+        {
+            m_animator.SetLayerWeight(1, 0);
 
         }
 
 
-        if (moveSpeed >= 30f)
-            moveSpeed = 30f;
+        x = Mathf.Lerp(x, _xMovement, Time.deltaTime * speedDodge);
+
+        Vector3 moveVector = new Vector3(x - transform.position.x, y * Time.deltaTime, moveSpeed * Time.deltaTime);
+
+        m_char.Move(moveVector);
+        if (moveSpeed >= 10f)
+            moveSpeed = 10f;
         else
             StartCoroutine(IncreaseMoveSpeed());
-
     }
-    void playerJump()
+
+    private void jump()
     {
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Space))
+        if (m_char.isGrounded)
         {
-            if (!isJumping)
+            
+            if (SwipeUp)
             {
-                jumpSound.Play();
-                isJumping = true;
-                animator.SetBool("Jump", true);
-                StartCoroutine(JumpSequence());
-
-            }
-
-        }
-        if (isJumping)
-        {
-            if (!ComingDown)
-            {
-                transform.Translate(Vector3.up * Time.deltaTime * 6, Space.World);
-            }
-            if (ComingDown)
-            {
-                transform.Translate(Vector3.up * Time.deltaTime * -6.4f, Space.World);
+                y = JumpPower;
+                m_animator.CrossFadeInFixedTime("Jump", 0.1f);
+                InJump = true;
             }
         }
-
+        else
+        {
+            y -= JumpPower * 2 * Time.deltaTime;
+            if (m_char.velocity.y < -0.1f)
+            {
+                playingAnimation("Falling");
+            }
+        }
     }
-    IEnumerator JumpSequence()
+    internal float RollCounter;
+    
+    public void playingAnimation(string anim)
     {
-        yield return new WaitForSeconds(.55f);
-        ComingDown = true;
-        yield return new WaitForSeconds(.55f);
-        isJumping = false;
-        ComingDown = false;
-        animator.SetBool("Jump", false);
-        playerObject.transform.position = new Vector3(playerObject.transform.position.x, 0, playerObject.transform.position.z);
 
-
+        m_animator.Play(anim);
     }
-    void jumpAndroid()
-    {
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-
-            if (touch.phase == TouchPhase.Began)
-            {
-                touchStartPos = touch.position;
-            }
-            else if (touch.phase == TouchPhase.Ended)
-            {
-                touchEndPos = touch.position;
-
-                float swipeDistance = Vector2.Distance(touchStartPos, touchEndPos);
-
-                if (swipeDistance > swipeThreshold && touchEndPos.y > touchStartPos.y)
-                {
-                    // A swipe from down to up has been detected.
-                    // You can call your function or perform an action here.
-                    AndroidJump();
-                }
-            }
-        }
-    }
-    void AndroidJump()
-    {
-        if (!isJumping)
-        {
-            jumpSound.Play();
-            isJumping = true;
-            animator.SetBool("Jump", true);
-            StartCoroutine(JumpSequence());
-
-        }
-        if (isJumping)
-        {
-            if (!ComingDown)
-            {
-                transform.Translate(Vector3.up * Time.deltaTime * 6, Space.World);
-            }
-            if (ComingDown)
-            {
-                transform.Translate(Vector3.up * Time.deltaTime * -6.4f, Space.World);
-            }
-        }
-
-    }
-
-
 }
-
-
-

@@ -15,6 +15,8 @@ public class LevelStarterCounDown : MonoBehaviour
     {
         StartCoroutine(CountSequence());
     }
+
+    //while starting game coundown sequence will start 3,2,1 lets go
     IEnumerator CountSequence()
     {
         fadedScreen.SetActive(true);

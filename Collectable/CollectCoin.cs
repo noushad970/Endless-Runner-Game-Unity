@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+//this script will added with coin prefab.
 
 public class CollectCoin : MonoBehaviour
 {
@@ -10,13 +11,14 @@ public class CollectCoin : MonoBehaviour
     public LevelDistance HighScore;
    // public int totalCoin;
     public AudioSource coinFX;
-    // Uncommentable int TotalCoins;
+    
+  
 
     public int coins=0;
 
     
 
-    
+    //when a coin will hit a player it will increase the coin by 1
     private void OnTriggerEnter(Collider other)
     {
         coinFX.Play();

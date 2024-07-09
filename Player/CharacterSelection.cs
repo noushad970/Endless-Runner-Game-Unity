@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class CharacterSelection : MonoBehaviour
 {
-    public GameObject Aj, Josh, Maria, Luna;
-    public MainMenuFunction mainMenu;
-    public bool aj, josh, luna, maria;
+    public GameObject cat,racoon;
+  //  public MainMenuFunction mainMenu;
+    public bool Cat, Racoon;
 
     
-
 
 
     // Update is called once per frame
@@ -18,31 +17,15 @@ public class CharacterSelection : MonoBehaviour
         
        if(MainMenuFunction.characterSelection==1)
         {
-            Aj.SetActive(true);
-            Josh.SetActive(false); 
-            Maria.SetActive(false);
-            Luna.SetActive(false);
+            cat.SetActive(true);
+            racoon.SetActive(false);
         }
         if (MainMenuFunction.characterSelection == 2)
         {
-            Aj.SetActive(false);
-            Josh.SetActive(true);
-            Maria.SetActive(false);
-            Luna.SetActive(false);
+            cat.SetActive(false);
+            racoon.SetActive(true);
+
         }
-        if (MainMenuFunction.characterSelection == 4)
-        {
-            Aj.SetActive(false);
-            Josh.SetActive(false);
-            Maria.SetActive(false);
-            Luna.SetActive(true);
-        }
-        if (MainMenuFunction.characterSelection == 3)
-        {
-            Aj.SetActive(false);
-            Josh.SetActive(false);
-            Maria.SetActive(true);
-            Luna.SetActive(false);
-        }
+       
     }
 }

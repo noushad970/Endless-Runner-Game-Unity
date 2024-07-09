@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
+    //game over sound system for the game
     
     public bool Gameover=false;
     public static bool GameoverSave = false;
