@@ -100,7 +100,7 @@ public class GenerateLevel : MonoBehaviour
         yield return new WaitForSeconds(3);
         CreatingSection = false;
     }
-    float zPosSubway = 477;
+    float zPosSubway = 460;
     IEnumerator GenerateSubwaySection()
     {
         

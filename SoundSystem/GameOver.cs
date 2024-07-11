@@ -35,10 +35,12 @@ public class GameOver : MonoBehaviour
             Gameover = false;
 
 
+
         }
 
         
     }
+    
     IEnumerator wait1Sec()
     {
         yield return new WaitForSeconds(3f);
@@ -46,6 +48,10 @@ public class GameOver : MonoBehaviour
         ScoreHide.SetActive(false);
         yield return new WaitForSeconds(3f);
         SceneManager.LoadScene(0);
+       // CollectableControl.coinCount = 0;
+        CollectableControl.coinCount = 0;
+        CollectableControl.instance.coins = 0;
+            InterstitialAdExample.instance.ShowAd();
     }
-    
+
 }

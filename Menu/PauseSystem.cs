@@ -4,16 +4,19 @@ using UnityEngine.UI;
 
 public class PauseSystem : MonoBehaviour
 {
+    public static PauseSystem instance;
     public GameObject pausePanel;
     public Button pauseButton;
     public Button resumeButton;
     public Button mainMenuButton;
    
-    private bool isPaused = false;
+    public bool isPaused = false;
     public static bool IsGoMainMenu;
     private void Awake()
     {
+        instance= this;
         IsGoMainMenu = false;
+
     }
     void Start()
     {
@@ -32,7 +35,6 @@ public class PauseSystem : MonoBehaviour
         pausePanel.SetActive(isPaused);
         
         Time.timeScale = isPaused ? 0 : 1;
-        InterstitialAdExample.instance.ShowAd();
     }
 
     void ResumeGame()
@@ -49,6 +51,6 @@ public class PauseSystem : MonoBehaviour
         // Make sure to resume the game before loading the main menu
         Time.timeScale = 1;
         SceneManager.LoadScene("MainMenu"); // Change "MainMenu" to the name of your main menu scene
-        InterstitialAdExample.instance.ShowAd();
+      
     }
 }

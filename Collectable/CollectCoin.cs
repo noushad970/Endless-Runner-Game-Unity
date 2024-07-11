@@ -10,9 +10,9 @@ public class CollectCoin : MonoBehaviour
     public GameObject totalcoin;
    // public int totalCoin;
     public AudioSource coinFX;
-    
-  
 
+
+   
     public int coins=0;
 
     

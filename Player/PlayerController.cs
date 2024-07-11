@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator IncreaseMoveSpeed()
     {
-        moveSpeed += 0.001f;
+        moveSpeed += 0.002f;
         yield return new WaitForSeconds(1f);
     }
 
@@ -172,8 +172,8 @@ public class PlayerController : MonoBehaviour
         Vector3 moveVector = new Vector3(x - transform.position.x, y * Time.deltaTime, moveSpeed * Time.deltaTime);
 
         m_char.Move(moveVector);
-        if (moveSpeed >= 10f)
-            moveSpeed = 10f;
+        if (moveSpeed >= 15f)
+            moveSpeed = 15f;
         else
             StartCoroutine(IncreaseMoveSpeed());
     }

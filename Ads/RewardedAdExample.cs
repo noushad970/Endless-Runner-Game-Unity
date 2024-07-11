@@ -8,7 +8,7 @@ public class RewardedAdExample : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     string _androidAdUnitId = "Rewarded_Android";
     string _iOSAdUnitId = "Rewarded_iOS";
     string _adUnitId = null; // This will remain null for unsupported platforms
-   
+    public static bool isRewarded=false;
     void Awake()
     {
         instance = this;
@@ -55,7 +55,13 @@ public class RewardedAdExample : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
     {
         // Disable the button:
         // Then show the ad:
-        Advertisement.Show(_adUnitId, this);
+       
+
+            Advertisement.Show(_adUnitId, this);
+
+            LoadAd();
+            OnUnityAdsShowComplete(_adUnitId, 0);
+        
     }
 
     // Implement the Show Listener's OnUnityAdsShowComplete callback method to determine if the user gets a reward:
@@ -64,7 +70,7 @@ public class RewardedAdExample : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         if (adUnitId.Equals(_adUnitId) && showCompletionState.Equals(UnityAdsShowCompletionState.COMPLETED))
         {
             Debug.Log("Unity Ads Rewarded Ad Completed");
-           CollectableControl.coinCount+=100;
+            isRewarded = true;
             // Grant a reward.
         }
     }

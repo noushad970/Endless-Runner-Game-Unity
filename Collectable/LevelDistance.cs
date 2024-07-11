@@ -41,6 +41,11 @@ public class LevelDistance : MonoBehaviour
             timer = 0.000001f;
         else
             timer -= 0.000001f;
+        if (PauseSystem.instance.isPaused)
+        {
+            disRun += 0;
+        }
+        else
         disRun +=1;
        // PlayerPrefs.SetInt("RunInOne", disRun);
         disDisplay.GetComponent<Text>().text = "" + disRun;

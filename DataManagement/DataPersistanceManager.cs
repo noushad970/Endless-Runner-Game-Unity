@@ -26,8 +26,12 @@ public class DataPersistanceManager : MonoBehaviour
     {
         if(GameOver.GameoverSave)
         {
+            
             saveGame();
             loadGame();
+
+           // CollectableControl.coins = 0;
+          // CollectableControl.coinCount = 0;
             GameOver.GameoverSave= false;
         }
         if(MainMenuFunction.saveCharacterData== true)
@@ -51,9 +55,24 @@ public class DataPersistanceManager : MonoBehaviour
             saveGame();
             loadGame();
 
-            instAds.ShowAd();
+            
             PauseSystem.IsGoMainMenu = false;
         }
+        if(MainMenuFunction.saveCharacterData == true)
+        {
+            saveGame();
+            loadGame();
+            MainMenuFunction.saveCharacterData = false;
+        }
+        if (RewardedAdExample.isRewarded==true)
+        {
+
+            
+            saveGame(); 
+            loadGame();
+            RewardedAdExample.isRewarded = false;
+        }
+        
 
     }
     public static DataPersistanceManager instance 

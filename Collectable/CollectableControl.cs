@@ -4,9 +4,9 @@ using UnityEngine.UI;
 public class CollectableControl : MonoBehaviour, IDataPersistence
 {
     public static CollectableControl instance;
-    public static int coinCount;
+    public static int coinCount;//this value is used by coins to get the total coins
     public static int TotalcoinCountForMenu;//this value should changed when I give reward to any player from mainmenu;
-    public int coins;
+    public int coins;//this value will be added with total coins
     public GameObject coinCountDisplay;
     public GameObject coinEndCountDisplay;
     public PlayerController playerControllerCat;
@@ -18,24 +18,34 @@ public class CollectableControl : MonoBehaviour, IDataPersistence
     }
     private void Start()
     {
-        getCoinsButton.onClick.AddListener(rewarded);
+        if (getCoinsButton != null)
+        {
+
+            getCoinsButton.onClick.AddListener(rewarded);
+        }
     }
     //game data will load here
     public void loadData(GameData data)
     {
-        this.coins = data.coins;
+        coins = data.coins;
         TotalcoinCountForMenu = data.coins;
+        Debug.Log("coins: " + coins + " coinCount: " + coinCount + " TotalcoinCountForMenu: " + TotalcoinCountForMenu + " coinCountDisplay: " + coinCountDisplay + " coinCountEndDisplay: " + coinEndCountDisplay + " ");
+        Debug.Log("Data.Coins: " + data.coins);    
     }
     //game data will save here
     public void saveData(ref GameData data)
     {
-        data.coins += this.coins;
+        data.coins += coins;
+        if(RewardedAdExample.isRewarded)
+        {
+            data.coins += 5000;
+        }
     }
     void rewarded()
     {
         RewardedAdExample.instance.ShowAd();
-       // coinCount += 100;
-        TotalcoinCountForMenu += 100;
+      
+        
     }
     
     // Update is called once per frame

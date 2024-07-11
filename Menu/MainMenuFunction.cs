@@ -15,8 +15,10 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
     public static bool saveCharacterData=false,saveMap=false;
     public static int characterSelection,mapSelection;
     public static int LoadInt=0;
+    public static bool saveAfterBuyData=false;
     public GameObject HowToPlayScreen;
-    bool isBuyedDesertMap, isBuyedSubwayMap;
+    bool isBuyedDesertMap;
+    bool isBuyedSubwayMaps;
     int totalcoin;
     public GameObject isLockedDesertMap,isLockedSubwayMap;
     public GameObject confirmDesertMapBuyPanel, confirmSubwayMapBuyPanel, panel,notEnoughCoinPanel;
@@ -29,7 +31,7 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
 
         mapSelection = data.selectedMap;
         isBuyedDesertMap = data.isEnableDesertMap;
-        isBuyedSubwayMap = data.isEnableSubWayMap;
+        isBuyedSubwayMaps = data.isEnableSubWayMap;
         totalcoin = data.coins;
         isBuyedDesertMap=data.isEnableDesertMap;
 
@@ -61,10 +63,10 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
             data.isEnableDesertMap = true;
             data.coins = totalcoin;
         }
-        if(isSelectedSubwayMap && isBuyedDesertMap)
+        if(isSelectedSubwayMap && isBuyedSubwayMaps)
         {
             data.selectedMap = 4;
-            data.isEnableDesertMap= true;
+            data.isEnableSubWayMap= true;
             data.coins = totalcoin;
         }
         mapval = data.selectedMap;
@@ -76,6 +78,14 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
     {
         Debug.Log("Selected Map Value: " + mapval);
         ///those code will execute the player and map according to player choice
+        if (isBuyedSubwayMaps && isLockedSubwayMap != null)
+        {
+            Destroy(isLockedSubwayMap);
+        }
+        if (isBuyedDesertMap && isLockedDesertMap != null)
+        {
+            Destroy(isLockedDesertMap);
+        }
         if (isSelectedCat)
         {
             characterSelection = 1;
@@ -111,12 +121,7 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
             cat.SetActive(false);
             racoon.SetActive(true);
         }
-        if (isBuyedDesertMap && isLockedDesertMap!=null)
-        {
-            Destroy(isLockedDesertMap);
-        }
-        if(isBuyedSubwayMap && isLockedSubwayMap!=null)
-        { Destroy(isLockedSubwayMap);}
+        
 
 
 
@@ -128,7 +133,7 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         NoButtonSubway.onClick.AddListener(OnclickOkButton);
         NoButtonDesert.onClick.AddListener(OnclickOkButton);
         yesButtonDesert.onClick.AddListener(OnclickYesDesertButton);
-        yesButtonSubway.onClick.AddListener(onClickYesSubwayButton);
+        yesButtonSubway.onClick.AddListener(OnclickYesSubwayButton);
         cat.SetActive(true);
         HowToPlayScreen.SetActive(false);
         if (characterSelection == 1)
@@ -330,12 +335,12 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         else
         {
             panel.SetActive(true);
-            confirmDesertMapBuyPanel.SetActive(true);
-            if(totalcoin>5000)
+            if(totalcoin>=5000)
             {
 
-                panel.SetActive(true);
+                
                 confirmDesertMapBuyPanel.SetActive(true);
+                confirmSubwayMapBuyPanel.SetActive(false);
                 
             }
             else
@@ -343,7 +348,9 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
                 Debug.Log("Dont have Enough Coins");
                 notEnoughCoinPanel.SetActive(true);
 
-                notEnoughCoinPanel.SetActive(true);
+                confirmDesertMapBuyPanel.SetActive(false);
+                confirmSubwayMapBuyPanel.SetActive(false);
+
             }
         }
 
@@ -357,18 +364,30 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         isSelectedNightMap = false;
         isSelectedDesertMap = true;
         isSelectedSubwayMap = false;
-        BackAllCharShow();
+       
 
-        dayMapButton.SetActive(false);
-        NightMapButton.SetActive(false);
-        DesertMapButton.SetActive(false);
-        subwayMapButton.SetActive(false);
+        //dayMapButton.SetActive(false);
+        //NightMapButton.SetActive(false);
+        //DesertMapButton.SetActive(false);
+        //subwayMapButton.SetActive(false);
         saveMap = true;
+        //all confirm and ok panel should be disable
+        notEnoughCoinPanel.SetActive(false);
+        panel.SetActive(false);
+        confirmDesertMapBuyPanel.SetActive(false);
+        confirmSubwayMapBuyPanel.SetActive(false);
+        if (isLockedDesertMap != null)
+        {
+            Destroy(isLockedDesertMap);
+        }
     }
+    //
     public void ClickOnSubwayMap()
     {
-        if(isBuyedSubwayMap)
+        Debug.Log("IsBuyedSubwayMap: " + isBuyedSubwayMaps);
+        if (isBuyedSubwayMaps)
         {
+
             isSelectedDayMap = false;
             isSelectedNightMap = false;
             isSelectedDesertMap = false;
@@ -383,39 +402,126 @@ public class MainMenuFunction : MonoBehaviour, IDataPersistence
         }
         else
         {
-            if (totalcoin > 10000)
+            panel.SetActive(true);
+            if (totalcoin >= 10000)
             {
-                panel.SetActive(true);
+
+
+                confirmDesertMapBuyPanel.SetActive(false);
+                confirmSubwayMapBuyPanel.SetActive(true);
+
+            }
+            else
+            {
+                Debug.Log("Dont have Enough Coins");
+                notEnoughCoinPanel.SetActive(true);
+
+                confirmDesertMapBuyPanel.SetActive(false);
+                confirmSubwayMapBuyPanel.SetActive(false);
+
+            }
+        }
+
+
+    }
+    void OnclickYesSubwayButton()
+    {
+        totalcoin -= 10000;
+        isBuyedSubwayMaps = true;
+        isSelectedDayMap = false;
+        isSelectedNightMap = false;
+        isSelectedDesertMap = false;
+        isSelectedSubwayMap = true;
+
+
+        //dayMapButton.SetActive(false);
+        //NightMapButton.SetActive(false);
+        //DesertMapButton.SetActive(false);
+        //subwayMapButton.SetActive(false);
+        saveMap = true;
+        //all confirm and ok panel should be disable
+        notEnoughCoinPanel.SetActive(false);
+        panel.SetActive(false);
+        confirmDesertMapBuyPanel.SetActive(false);
+        confirmSubwayMapBuyPanel.SetActive(false);
+        if (isLockedSubwayMap != null)
+        {
+            Destroy(isLockedSubwayMap);
+        }
+    }
+    //
+    /*
+    public void ClickOnSubwayMap()
+    {
+        if(isBuyedSubwayMap)
+        {
+
+
+           // saveAfterBuyData = true;
+            isSelectedDayMap = false;
+            isSelectedNightMap = false;
+            isSelectedDesertMap = false;
+            isSelectedSubwayMap = true;
+            BackAllCharShow();
+
+            dayMapButton.SetActive(false);
+            NightMapButton.SetActive(false);
+            DesertMapButton.SetActive(false);
+            subwayMapButton.SetActive(false);
+            saveMap = true;
+        }
+        else
+        {
+            panel.SetActive(true);
+            if (totalcoin >= 10000)
+            {
+                confirmDesertMapBuyPanel.SetActive(false);
                 confirmSubwayMapBuyPanel.SetActive(true);
                 
                 
             }
             else
             {
-                panel.SetActive(true);
+               
                 notEnoughCoinPanel.SetActive(true);
+                confirmDesertMapBuyPanel.SetActive(false);
+                confirmSubwayMapBuyPanel.SetActive(false);
                 Debug.Log("Dont have Enough Coins");
             }
         }
 
-
+        
+        
     }
     void onClickYesSubwayButton()
     {
         totalcoin -= 10000;
+        //saveAfterBuyData =true;
+        
         isBuyedSubwayMap = true;
         isSelectedDayMap = false;
         isSelectedNightMap = false;
         isSelectedDesertMap = false;
         isSelectedSubwayMap = true;
-        BackAllCharShow();
+        //BackAllCharShow();
 
-        dayMapButton.SetActive(false);
-        NightMapButton.SetActive(false);
-        DesertMapButton.SetActive(false);
-        subwayMapButton.SetActive(false);
+        //dayMapButton.SetActive(false);
+        //NightMapButton.SetActive(false);
+        //DesertMapButton.SetActive(false);
+        //subwayMapButton.SetActive(false);
         saveMap = true;
+
+        //all confirm and ok panel should be disable
+        notEnoughCoinPanel.SetActive(false);
+        panel.SetActive(false);
+        confirmDesertMapBuyPanel.SetActive(false);
+        confirmSubwayMapBuyPanel.SetActive(false);
+        if (isLockedSubwayMap != null)
+        {
+            Destroy(isLockedSubwayMap);
+        }
     }
+    */
     void OnclickOkButton()
     {
         panel.SetActive(false);
