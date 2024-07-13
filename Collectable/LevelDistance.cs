@@ -35,7 +35,6 @@ public class LevelDistance : MonoBehaviour
     }
     IEnumerator AddingDis()
     {
-        
 
         if (timer < 0.000001f)
             timer = 0.000001f;
@@ -44,8 +43,9 @@ public class LevelDistance : MonoBehaviour
         if (PauseSystem.instance.isPaused)
         {
             disRun += 0;
-        }else if (ObjectCollider.isScore2XPowerUp)
+        }else if (PlayerController.twoXScore)
         {
+
             disRun += 2;
         }
         else

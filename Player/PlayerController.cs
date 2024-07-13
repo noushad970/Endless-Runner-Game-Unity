@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     public static bool ComingDown = false;
     public GameObject playerObject;
     public Animator animator;
-    public AudioSource jumpSound;
 
     public ParticleSystem ParticleHitEffect;
     CoinMagnetSystem coinMagnetSystem;
@@ -45,6 +44,7 @@ public class PlayerController : MonoBehaviour
     public float forwardSpeed;
     private float y;
     private float colHeight, colCenterY;
+    public static bool twoXScore=false;
     [Header("Jump Power Up")]
     float JumpPowerDuration=13f;
     public ParticleSystem jumpUpParticleLoop;
@@ -54,6 +54,13 @@ public class PlayerController : MonoBehaviour
     [Header("Score 2X PowerUp")]
     public ParticleSystem twoXScoreParticleLoop;
     float Score2XPowerDuration = 13f;
+    [Header("Sound System")]
+
+    public AudioSource slideLeftRightSound;
+    public AudioSource slideDownSound;
+    public AudioSource powerUpObjectCollideSound;
+    public AudioSource CatJumpSound;
+    public AudioSource RacconJumpSound;
     // Update is called once per frame
     //wait 6 second for cowndown
     private void Start()
@@ -84,22 +91,27 @@ public class PlayerController : MonoBehaviour
             InputHandling();
             if(ObjectCollider.isJumpPowerUp)
             {
+                powerUpObjectCollideSound.Play();
                 StartCoroutine(jumpPowerUp());
                 ObjectCollider.isJumpPowerUp = false;
             }
             if(ObjectCollider.isCoinMagnetPowerUp)
             {
+                powerUpObjectCollideSound.Play();
                 StartCoroutine(CoinMagnetPowerUp());
                 ObjectCollider.isCoinMagnetPowerUp=false;
             }
             if (ObjectCollider.isScore2XPowerUp)
             {
+
+                powerUpObjectCollideSound.Play();
                 StartCoroutine(Score2XPowerUp());
+                ObjectCollider.isScore2XPowerUp = false;
             }
             
 
+            Debug.Log("PlayerController Character Value: " + charValue);
         }
-        
         
         
     }
@@ -110,7 +122,7 @@ public class PlayerController : MonoBehaviour
     {
 
         if (slideInput == 1)
-        {
+        {   slideDownSound.Play();
             animator.Play("Slide");
             StartCoroutine(disableCharControl());
         }
@@ -118,6 +130,12 @@ public class PlayerController : MonoBehaviour
 
 
     }
+    int charValue;
+    public void loadData(GameData data)
+    {
+        charValue = data.SelectedCharacter;
+    }
+
     IEnumerator disableCharControl()
     {
 
@@ -154,10 +172,12 @@ public class PlayerController : MonoBehaviour
         {
             if (_xMovement == 0)
             {
+                slideLeftRightSound.Play();
                 _xMovement = 2.5f;
             }
             else if (_xMovement == -2.5f)
             {
+                slideLeftRightSound.Play();
                 _xMovement = 0f;
             }
         }
@@ -165,10 +185,12 @@ public class PlayerController : MonoBehaviour
         {
             if (_xMovement == 0f)
             {
+                slideLeftRightSound.Play();
                 _xMovement = -2.5f;
             }
             else if (_xMovement == 2.5f)
             {
+                slideLeftRightSound.Play();
                 _xMovement = 0f;
             }
         }
@@ -216,6 +238,14 @@ public class PlayerController : MonoBehaviour
 
             if (SwipeUp)
             {
+                if (MainMenuFunction.characterSelection == 1)
+                {
+                    CatJumpSound.Play();
+                }
+                if(MainMenuFunction.characterSelection == 2)
+                {
+                    RacconJumpSound.Play();
+                }
                 y = JumpPower;
                 m_animator.CrossFadeInFixedTime("Jump", 0.1f);
                 InJump = true;
@@ -261,12 +291,12 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator Score2XPowerUp()
     {
+        twoXScore = true;
         twoXScoreParticleLoop.Play();
         ParticleHitEffect.Play();
         yield return new WaitForSeconds(Score2XPowerDuration);
         twoXScoreParticleLoop.Stop();
-
-        ObjectCollider.isScore2XPowerUp = false;
+        twoXScore = false;
 
 
 

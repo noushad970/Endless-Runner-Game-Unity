@@ -24,7 +24,7 @@ public class ObjectCollider : MonoBehaviour
             isCoinMagnetPowerUp = true;
             Destroy(gameObject);
         }
-        if (other.tag == "Player" && this.tag == "Score2X")
+        if (other.tag == "Player" && this.tag == "Score2XPowerUp")
         {
             isScore2XPowerUp = true;
             Destroy(gameObject);

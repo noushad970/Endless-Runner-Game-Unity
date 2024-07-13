@@ -16,7 +16,7 @@ public class PowerUpGenerator : MonoBehaviour
     // Start is called before the first frame update
     private void OnTriggerEnter(Collider other)
     {
-        int randomNum = 2;//Random.Range(1,4);
+        int randomNum = Random.Range(1, 4) ;//Random.Range(1,4);
         int randomXPosForPowerUp = Random.Range(1, 4);
         Debug.Log("other.tag: " + other.tag + " this Tag: " + this.tag);
         if (other.tag == "Player" && randomNum==1)

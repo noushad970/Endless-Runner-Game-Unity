@@ -13,6 +13,7 @@ public class GameOver : MonoBehaviour
     public GameObject gameOverScore;
     public GameObject ScoreHide;
     public int PreviousScore;
+    public AudioSource CatDeadSound,RacconDeadSound,ObjectCollideSound;
     //public LevelDistance Distance;
     public int coins=0;
     public Text coinTexts;
@@ -24,6 +25,16 @@ public class GameOver : MonoBehaviour
         {
 
             // SavePlayer();
+           
+                ObjectCollideSound.Play();
+                if (MainMenuFunction.characterSelection == 1)
+                {
+                    CatDeadSound.Play();
+                }
+                if (MainMenuFunction.characterSelection == 2)
+                {
+                RacconDeadSound.Play();
+                }
             
             coins += CollectableControl.coinCount;
             // PreviousScore = Distance.disRun;
