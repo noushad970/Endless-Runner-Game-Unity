@@ -44,6 +44,9 @@ public class LevelDistance : MonoBehaviour
         if (PauseSystem.instance.isPaused)
         {
             disRun += 0;
+        }else if (ObjectCollider.isScore2XPowerUp)
+        {
+            disRun += 2;
         }
         else
         disRun +=1;

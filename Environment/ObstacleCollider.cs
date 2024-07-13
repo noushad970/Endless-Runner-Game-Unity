@@ -4,22 +4,7 @@ using UnityEngine;
 
 public class ObstacleCollider : MonoBehaviour
 {
-    //
-    /* public GameObject AJ;
-     public GameObject Josh;
-     public GameObject Maria;
-     public GameObject Luna;
-
-     public Animator AJAnimator;
-     public Animator JoshAnimator;
-     public Animator MariaAnimator;
-     public Animator LunaAnimator;
-     
-    public GameObject mainCamAJ;
-    public GameObject mainCamJosh;
-    public GameObject mainCamMaria;
-    public GameObject mainCamLuna;
-    */
+    
     public GameObject Cat;
     public GameObject Raccon;
 
@@ -34,6 +19,7 @@ public class ObstacleCollider : MonoBehaviour
     public AudioSource hitAudio;
     public GameObject ScoreEnd;
     public GameOver isOver;
+    public static bool gameover=false;
     //while player collide with an object it will be game over
     private void OnTriggerEnter(Collider other)
     {
@@ -47,9 +33,9 @@ public class ObstacleCollider : MonoBehaviour
         RacconAnimator.SetBool("GameOver", true);
        // mainCamRaccon.GetComponent<Animator>().enabled = true;
 
+        gameover = true;
 
-
-
+        Debug.Log(gameover);
 
         ScoreEnd.GetComponent<LevelDistance>().enabled = false;
 

@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     public AudioSource jumpSound;
 
+    public ParticleSystem ParticleHitEffect;
+    CoinMagnetSystem coinMagnetSystem;
 
     private float _xMovement;
      float xSpeed = 10f;
@@ -43,6 +45,15 @@ public class PlayerController : MonoBehaviour
     public float forwardSpeed;
     private float y;
     private float colHeight, colCenterY;
+    [Header("Jump Power Up")]
+    float JumpPowerDuration=13f;
+    public ParticleSystem jumpUpParticleLoop;
+    [Header("Coin Magnet PowerUp")]
+    public ParticleSystem coinMagnetParticleLoop;
+    float CoinMagnetPowerDuration = 13f;
+    [Header("Score 2X PowerUp")]
+    public ParticleSystem twoXScoreParticleLoop;
+    float Score2XPowerDuration = 13f;
     // Update is called once per frame
     //wait 6 second for cowndown
     private void Start()
@@ -51,26 +62,46 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(waitfor6Sec());
         m_char = GetComponent<CharacterController>();
         m_animator = GetComponent<Animator>();
+        coinMagnetSystem=GetComponent<CoinMagnetSystem>();
+        coinMagnetSystem.enabled = false;
         transform.position = Vector3.zero;
         colCenterY = m_char.center.y;
         colHeight = m_char.height;
     }
 
+    private void Awake()
+    {
+    }
     void Update()
     {
         animator.SetBool("Idle", true);
         if (gameStart)
         {
-            //movement();
-            //playerJump();
             sliding();
-            //rolling();
             jump();
             PlayerInputAndMovement();
             animator.SetBool("Idle", false);
             InputHandling();
-            // StartCoroutine(moveX());
+            if(ObjectCollider.isJumpPowerUp)
+            {
+                StartCoroutine(jumpPowerUp());
+                ObjectCollider.isJumpPowerUp = false;
+            }
+            if(ObjectCollider.isCoinMagnetPowerUp)
+            {
+                StartCoroutine(CoinMagnetPowerUp());
+                ObjectCollider.isCoinMagnetPowerUp=false;
+            }
+            if (ObjectCollider.isScore2XPowerUp)
+            {
+                StartCoroutine(Score2XPowerUp());
+            }
+            
+
         }
+        
+        
+        
     }
     //if swap left or right in android it will switch the player to that side
 
@@ -106,7 +137,7 @@ public class PlayerController : MonoBehaviour
     }
     IEnumerator IncreaseMoveSpeed()
     {
-        moveSpeed += 0.002f;
+        moveSpeed += 0.0012f;
         yield return new WaitForSeconds(1f);
     }
 
@@ -172,8 +203,8 @@ public class PlayerController : MonoBehaviour
         Vector3 moveVector = new Vector3(x - transform.position.x, y * Time.deltaTime, moveSpeed * Time.deltaTime);
 
         m_char.Move(moveVector);
-        if (moveSpeed >= 15f)
-            moveSpeed = 15f;
+        if (moveSpeed >= 13f)
+            moveSpeed = 13f;
         else
             StartCoroutine(IncreaseMoveSpeed());
     }
@@ -206,4 +237,39 @@ public class PlayerController : MonoBehaviour
 
         m_animator.Play(anim);
     }
+
+    IEnumerator jumpPowerUp()
+    {
+        float temps=JumpPower;
+        jumpUpParticleLoop.Play();
+        ParticleHitEffect.Play();
+        JumpPower = 17f;
+        yield return new WaitForSeconds(JumpPowerDuration);
+        JumpPower=temps;
+        jumpUpParticleLoop.Stop();
+    }
+    IEnumerator CoinMagnetPowerUp()
+    {
+        coinMagnetSystem.enabled=true;
+        coinMagnetParticleLoop.Play();
+        ParticleHitEffect.Play();
+        yield return new WaitForSeconds(CoinMagnetPowerDuration);
+        coinMagnetParticleLoop.Stop();
+        
+        coinMagnetSystem.enabled = false;
+
+    }
+    IEnumerator Score2XPowerUp()
+    {
+        twoXScoreParticleLoop.Play();
+        ParticleHitEffect.Play();
+        yield return new WaitForSeconds(Score2XPowerDuration);
+        twoXScoreParticleLoop.Stop();
+
+        ObjectCollider.isScore2XPowerUp = false;
+
+
+
+    }
+
 }

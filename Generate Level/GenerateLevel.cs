@@ -79,7 +79,7 @@ public class GenerateLevel : MonoBehaviour
         SecNum = Random.Range(0, sectionsDay.Length);
         Instantiate(sectionsDay[SecNum],new Vector3(0,0,zPos),Quaternion.identity);
         zPos += 62;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(6);
         CreatingSection = false ;
     }
     IEnumerator GenerateNightSection()
@@ -88,7 +88,7 @@ public class GenerateLevel : MonoBehaviour
         SecNum = Random.Range(0, sectionsNight.Length);
         Instantiate(sectionsNight[SecNum], new Vector3(0, 0, zPos), Quaternion.identity);
         zPos += 62;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(6);
         CreatingSection = false;
     }
     IEnumerator GenerateDesertSection()
@@ -97,14 +97,14 @@ public class GenerateLevel : MonoBehaviour
         SecNum = Random.Range(0, sectionsDesert.Length);
         Instantiate(sectionsDesert[SecNum], new Vector3(0, 0, zPos), Quaternion.identity);
         zPos += 62;
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(6);
         CreatingSection = false;
     }
     float zPosSubway = 460;
     IEnumerator GenerateSubwaySection()
     {
         
-        yield return new WaitForSeconds(50);
+        yield return new WaitForSeconds(40);
         Instantiate(sectionsSubway[0], new Vector3(0, 0, zPosSubway), Quaternion.identity);
         zPosSubway += 460;
 
